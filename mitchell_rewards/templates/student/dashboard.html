@@ -1,0 +1,315 @@
+<!-- mitchell_rewards/templates/student/dashboard.html -->
+{% extends 'base.html' %} {% block title %}Student Shop - Mitchell Rewards{%
+endblock %} {% block content %}
+<main x-data="studentShop()" class="student_dashboard_main_content p-4 md:p-8">
+  <!-- Sticky Search and Filter Bar -->
+  <div
+    class="student_shop_search_filter_bar sticky top-20 z-40 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-6"
+  >
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="relative w-full md:w-1/2">
+        <div
+          class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
+        >
+          <svg
+            class="w-4 h-4 text-gray-500 dark:text-gray-400"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 20"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+            />
+          </svg>
+        </div>
+        <input
+          type="search"
+          id="student_shop_search_input"
+          class="student_shop_search_input block w-full p-2.5 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Search items..."
+        />
+      </div>
+      <div class="w-full md:w-1/4">
+        <select
+          id="student_shop_filter_category"
+          class="student_shop_filter_category bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          <option selected>All Categories</option>
+          <option value="stationery">Stationery</option>
+          <option value="vouchers">Vouchers</option>
+          <option value="experiences">Experiences</option>
+        </select>
+      </div>
+      <div class="w-full md:w-1/4 flex justify-end">
+        <span
+          class="student_shop_points_display text-lg font-bold text-gray-900 dark:text-white"
+          >Your Points: <span id="current_points">1234</span></span
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Item Catalogue Grid -->
+  <div
+    class="student_shop_catalogue_grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+  >
+    <!-- Item Card Template (will be repeated for each item) -->
+    <template x-for="item in items" :key="item.id">
+      <div
+        class="student_shop_item_card bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 overflow-hidden"
+      >
+        <a href="#">
+          <img
+            class="student_shop_item_image rounded-t-lg w-full h-48 object-cover"
+            :src="item.image"
+            :alt="item.name"
+            onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/000000?text=Item';"
+          />
+        </a>
+        <div class="p-5">
+          <a href="#">
+            <h5
+              class="student_shop_item_name mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
+              x-text="item.name"
+            ></h5>
+          </a>
+          <p
+            class="student_shop_item_price mb-3 font-bold text-gray-700 dark:text-gray-400"
+            x-text="'Price: ' + item.price + ' Points'"
+          ></p>
+          <p
+            class="student_shop_item_stock mb-3 text-sm text-gray-600 dark:text-gray-500"
+            x-text="'Stock: ' + item.stock"
+          ></p>
+          <button
+            @click="openPurchaseModal(item)"
+            class="student_shop_purchase_button inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            Purchase
+            <svg
+              class="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 10"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M1 5h12m0 0L9 1m4 4L9 9"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <!-- Purchase Modal (Flowbite Modal + Alpine.js) -->
+  <div
+    id="purchase-modal"
+    tabindex="-1"
+    aria-hidden="true"
+    class="student_purchase_modal hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+  >
+    <div class="relative p-4 w-full max-w-md max-h-full">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <!-- Modal header -->
+        <div
+          class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
+        >
+          <h3
+            class="student_purchase_modal_title text-xl font-semibold text-gray-900 dark:text-white"
+          >
+            Purchase Item
+          </h3>
+          <button
+            type="button"
+            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            data-modal-hide="purchase-modal"
+          >
+            <svg
+              class="w-3 h-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 14"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+              />
+            </svg>
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+        <!-- Modal body -->
+        <div class="p-4 md:p-5">
+          <div
+            x-data="{
+                        currentBalance: 1234, // Placeholder, will fetch from backend
+                        selectedItem: null,
+                        purchaseCount: 1,
+                        calculatedCost: 0,
+                        updateCost() {
+                            if (this.selectedItem) {
+                                this.calculatedCost = this.purchaseCount * this.selectedItem.price;
+                            }
+                        },
+                        init() {
+                            // Initialize modal instance for Flowbite
+                            this.modal = new Modal(document.getElementById('purchase-modal'), {});
+                            // Listen for custom event to open modal
+                            this.$root.addEventListener('open-purchase-modal', (event) => {
+                                this.selectedItem = event.detail.item;
+                                this.purchaseCount = 1; // Reset count
+                                this.updateCost();
+                                this.modal.show();
+                            });
+                        },
+                        openPurchaseModal(item) {
+                            this.$dispatch('open-purchase-modal', { item: item });
+                        },
+                        confirmPurchase() {
+                            if (this.calculatedCost > this.currentBalance) {
+                                alert('Not enough points!'); // Replace with custom message box later
+                                return;
+                            }
+                            if (this.purchaseCount > this.selectedItem.stock) {
+                                alert('Not enough stock!'); // Replace with custom message box later
+                                return;
+                            }
+                            // Simulate successful purchase
+                            console.log('Purchasing:', this.purchaseCount, 'of', this.selectedItem.name, 'for', this.calculatedCost, 'points');
+                            // Replace with actual backend call
+                            alert(`Successfully purchased ${this.purchaseCount} x ${this.selectedItem.name} for ${this.calculatedCost} points!`); // Replace with custom message box later
+                            this.modal.hide();
+                            // Update points display (client-side simulation)
+                            this.currentBalance -= this.calculatedCost;
+                            document.getElementById('current_points').innerText = this.currentBalance;
+                            document.getElementById('nav_points_display').innerText = this.currentBalance;
+                        }
+                    }"
+          >
+            <p
+              class="student_purchase_balance_display mb-4 text-lg font-semibold text-gray-900 dark:text-white"
+            >
+              Balance: <span x-text="currentBalance"></span>
+            </p>
+            <div class="mb-4">
+              <label
+                for="purchase-count"
+                class="student_purchase_label_count block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Quantity</label
+              >
+              <input
+                type="number"
+                id="purchase-count"
+                x-model.number="purchaseCount"
+                @input="updateCost()"
+                :max="Math.min(selectedItem ? selectedItem.stock : 0, Math.floor(currentBalance / (selectedItem ? selectedItem.price : 1)))"
+                min="1"
+                class="student_purchase_input_count bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                required
+              />
+            </div>
+            <p
+              class="student_purchase_cost_display mb-6 text-lg font-semibold text-gray-900 dark:text-white"
+            >
+              Total Cost: <span x-text="calculatedCost"></span> Points
+            </p>
+            <button
+              @click="confirmPurchase()"
+              class="student_purchase_button_confirm w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Confirm Purchase
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  // Example data for demonstration (will be replaced by Flask/backend data)
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("studentShop", () => ({
+      items: [
+        {
+          id: 1,
+          name: "Notebook",
+          price: 50,
+          stock: 100,
+          image: "https://placehold.co/600x400/FFD700/000000?text=Notebook",
+        },
+        {
+          id: 2,
+          name: "Pen Set",
+          price: 75,
+          stock: 50,
+          image: "https://placehold.co/600x400/ADD8E6/000000?text=Pen+Set",
+        },
+        {
+          id: 3,
+          name: "Voucher $10",
+          price: 100,
+          stock: 20,
+          image: "https://placehold.co/600x400/90EE90/000000?text=Voucher",
+        },
+        {
+          id: 4,
+          name: "Headphones",
+          price: 250,
+          stock: 15,
+          image: "https://placehold.co/600x400/FFA07A/000000?text=Headphones",
+        },
+        {
+          id: 5,
+          name: "Water Bottle",
+          price: 60,
+          stock: 70,
+          image: "https://placehold.co/600x400/DDA0DD/000000?text=Bottle",
+        },
+        {
+          id: 6,
+          name: "USB Drive",
+          price: 90,
+          stock: 40,
+          image: "https://placehold.co/600x400/87CEEB/000000?text=USB",
+        },
+        {
+          id: 7,
+          name: "Movie Ticket",
+          price: 150,
+          stock: 30,
+          image: "https://placehold.co/600x400/F08080/000000?text=Movie",
+        },
+        {
+          id: 8,
+          name: "Backpack",
+          price: 300,
+          stock: 10,
+          image: "https://placehold.co/600x400/20B2AA/000000?text=Backpack",
+        },
+      ],
+      // Function to open the purchase modal
+      openPurchaseModal(item) {
+        // Dispatch a custom event that the modal's Alpine component listens for
+        this.$dispatch("open-purchase-modal", { item: item });
+      },
+    }));
+  });
+</script>
+{% endblock %}

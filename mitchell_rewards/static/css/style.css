@@ -1,0 +1,8 @@
+/* mitchell_rewards/static/css/style.css */
+/* Add your custom styles here to override Flowbite or add new ones */
+/* mitchell_rewards/static/css/style.css */
+
+/* Define custom font family for Poppins if not directly used by Tailwind config */
+.font-poppins {
+  font-family: "Poppins", sans-serif;
+}

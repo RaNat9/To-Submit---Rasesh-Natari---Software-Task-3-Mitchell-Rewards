@@ -1,0 +1,87 @@
+<!-- mitchell_rewards/templates/index.html -->
+{% extends 'base.html' %} {% block title %}Login - Mitchell Rewards{% endblock
+%} {% block content %}
+<section
+  class="index_login_section bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center py-8"
+>
+  <!-- Moved x-data to this parent container to encompass both form and debug info -->
+  <div
+    x-data="{ username: '', password: '', userType: 'student' }"
+    class="index_login_container w-full max-w-sm bg-white rounded-lg shadow dark:border border-gray-200 dark:border-gray-700 p-6 space-y-4 md:space-y-6 sm:p-8"
+  >
+    <h1
+      class="index_login_title text-3xl font-extrabold leading-tight tracking-tight text-gray-900 md:text-4xl dark:text-white text-center font-poppins"
+    >
+      Mitchell Rewards
+    </h1>
+    <!-- Alpine.js x-data removed from here as it's now on parent -->
+    <form
+      @submit.prevent="console.log('Login Data:', username, password, userType);"
+      class="index_login_form space-y-4 md:space-y-6"
+    >
+      <div>
+        <label
+          for="username"
+          class="index_login_label_username block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Username</label
+        >
+        <input
+          type="text"
+          name="username"
+          id="username"
+          x-model="username"
+          class="index_login_input_username bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="e.g., JohnDoe"
+          required
+        />
+      </div>
+      <div>
+        <label
+          for="password"
+          class="index_login_label_password block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Password</label
+        >
+        <input
+          type="password"
+          name="password"
+          id="password"
+          x-model="password"
+          placeholder="••••••••"
+          class="index_login_input_password bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          required
+        />
+      </div>
+      <div>
+        <label
+          for="user_type"
+          class="index_login_label_usertype block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Role</label
+        >
+        <select
+          id="user_type"
+          name="user_type"
+          x-model="userType"
+          class="index_login_select_usertype bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <button
+        type="submit"
+        class="index_login_button_submit w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+      >
+        Login
+      </button>
+    </form>
+    <!-- Optional: Display current values for debugging -->
+    <p class="text-sm text-gray-500 dark:text-gray-400 text-center mt-4">
+      <span
+        class="index_login_debug_info"
+        x-text="'Username: ' + username + ' | Password: ' + password + ' | Role: ' + userType"
+      ></span>
+    </p>
+  </div>
+</section>
+{% endblock %}

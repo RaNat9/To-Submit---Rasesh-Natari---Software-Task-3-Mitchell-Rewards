@@ -11,6 +11,29 @@ Rewards{% endblock %} {% block content %}
     Student Search
   </h2>
 
+  <!-- Custom Message Box Component - Controlled by appMessage Alpine.data -->
+  <div
+    x-data="appMessage()"
+    x-show="show"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 scale-90"
+    x-transition:enter-end="opacity-100 scale-100"
+    x-transition:leave="transition ease-in duration-300"
+    x-transition:leave-start="opacity-100 scale-100"
+    x-transition:leave-end="opacity-0 scale-90"
+    class="fixed inset-x-0 top-0 left-0 right-0 z-[100] flex justify-center items-start p-4 pointer-events-none"
+  >
+    <div
+      :class="{
+            'bg-green-100 border border-green-400 text-green-700': type === 'success',
+            'bg-red-100 border border-red-400 text-red-700': type === 'error'
+        }"
+      class="max-w-md w-full p-4 rounded-lg shadow-lg text-center pointer-events-auto mt-20"
+    >
+      <span x-text="message"></span>
+    </div>
+  </div>
+
   <!-- Search Form -->
   <div
     class="teacher_search_form_container bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-8"
@@ -126,208 +149,105 @@ Rewards{% endblock %} {% block content %}
     </table>
   </div>
 
-  <!-- Award Points Modal (Flowbite Modal + Alpine.js) -->
+  <!-- Award Points Modal (Alpine.js controlled, with transparent background) -->
   <div
-    id="award-modal"
-    tabindex="-1"
-    aria-hidden="true"
-    class="teacher_award_modal hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+    x-show="showModal"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-200"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+    class="teacher_award_modal fixed inset-0 z-50 flex items-center justify-center p-4"
   >
-    <div class="relative p-4 w-full max-w-md max-h-full">
-      <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-        <!-- Modal header -->
-        <div
-          class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
+    <!-- Transparent background overlay -->
+    <div
+      @click="closeModal()"
+      class="absolute inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm"
+    ></div>
+
+    <!-- Modal content -->
+    <div
+      class="relative bg-white rounded-lg shadow-lg dark:bg-gray-700 w-full max-w-md max-h-full overflow-y-auto"
+    >
+      <!-- Modal header -->
+      <div
+        class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
+      >
+        <h3
+          class="teacher_award_modal_title text-xl font-semibold text-gray-900 dark:text-white"
         >
-          <h3
-            class="teacher_award_modal_title text-xl font-semibold text-gray-900 dark:text-white"
+          Award Points to
+          <span
+            x-text="selectedStudent ? selectedStudent.firstName + ' ' + selectedStudent.lastName : ''"
+          ></span>
+        </h3>
+        <button
+          @click="closeModal()"
+          type="button"
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+        >
+          <svg
+            class="w-3 h-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14"
           >
-            Award Points to
-            <span
-              x-text="selectedStudent ? selectedStudent.firstName + ' ' + selectedStudent.lastName : ''"
-            ></span>
-          </h3>
-          <button
-            type="button"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-            data-modal-hide="award-modal"
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+            />
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="p-4 md:p-5">
+        <p
+          class="teacher_award_student_info mb-4 text-sm text-gray-700 dark:text-gray-400"
+          x-text="selectedStudent ? 'Year: ' + selectedStudent.year : ''"
+        ></p>
+        <div class="mb-4">
+          <label
+            for="award-reason"
+            class="teacher_award_label_reason block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Reason</label
           >
-            <svg
-              class="w-3 h-3"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 14"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-              />
-            </svg>
-            <span class="sr-only">Close modal</span>
-          </button>
+          <textarea
+            id="award-reason"
+            x-model="awardReason"
+            rows="4"
+            class="teacher_award_input_reason block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="e.g., Excellent participation in class"
+          ></textarea>
         </div>
-        <!-- Modal body -->
-        <div class="p-4 md:p-5">
-          <div
-            x-data="{
-                        selectedStudent: null,
-                        awardReason: '',
-                        awardPoints: 0,
-                        init() {
-                            this.modal = new Modal(document.getElementById('award-modal'), {});
-                            this.$root.addEventListener('open-award-modal', (event) => {
-                                this.selectedStudent = event.detail.student;
-                                this.awardReason = ''; // Reset form fields
-                                this.awardPoints = 0;
-                                this.modal.show();
-                            });
-                        },
-                        openAwardModal(student) {
-                            this.$dispatch('open-award-modal', { student: student });
-                        },
-                        confirmAward() {
-                            if (!this.selectedStudent || !this.awardReason || this.awardPoints <= 0) {
-                                alert('Please provide a reason and valid points.'); // Replace with custom message box
-                                return;
-                            }
-                            // Simulate successful award
-                            console.log(`Awarding ${this.awardPoints} points to ${this.selectedStudent.firstName} ${this.selectedStudent.lastName} for reason: ${this.awardReason}`);
-                            // Simulate success message as per storyboard
-                            alert(`Successfully awarded ${this.awardPoints} points to ${this.selectedStudent.firstName} ${this.selectedStudent.lastName}, from Year ${this.selectedStudent.year} for the reason: ${this.awardReason}`); // Replace with custom message box
-                            this.modal.hide();
-                            // In a real app, you'd update the student's points via backend call
-                            // For now, simulate update in the displayed list
-                            this.selectedStudent.points += this.awardPoints;
-                        }
-                    }"
+        <div class="mb-6">
+          <label
+            for="award-points"
+            class="teacher_award_label_points block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Points</label
           >
-            <p
-              class="teacher_award_student_info mb-4 text-sm text-gray-700 dark:text-gray-400"
-              x-text="selectedStudent ? 'Year: ' + selectedStudent.year : ''"
-            ></p>
-            <div class="mb-4">
-              <label
-                for="award-reason"
-                class="teacher_award_label_reason block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >Reason</label
-              >
-              <textarea
-                id="award-reason"
-                x-model="awardReason"
-                rows="4"
-                class="teacher_award_input_reason block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="e.g., Excellent participation in class"
-              ></textarea>
-            </div>
-            <div class="mb-6">
-              <label
-                for="award-points"
-                class="teacher_award_label_points block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >Points</label
-              >
-              <input
-                type="number"
-                id="award-points"
-                x-model.number="awardPoints"
-                min="1"
-                class="teacher_award_input_points bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                required
-              />
-            </div>
-            <button
-              @click="confirmAward()"
-              class="teacher_award_button_confirm w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Award
-            </button>
-          </div>
+          <input
+            type="number"
+            id="award-points"
+            x-model.number="awardPoints"
+            min="1"
+            class="teacher_award_input_points bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+            required
+          />
         </div>
+        <button
+          @click="confirmAward()"
+          class="teacher_award_button_confirm w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Award
+        </button>
       </div>
     </div>
   </div>
 </main>
-
-<script>
-  // Example data for demonstration (will be replaced by Flask/backend data)
-  document.addEventListener("alpine:init", () => {
-    Alpine.data("teacherStudentSearch", () => ({
-      searchFirstName: "",
-      searchLastName: "",
-      searchYear: null,
-      allStudents: [
-        {
-          id: 1,
-          firstName: "Alice",
-          lastName: "Smith",
-          year: 2025,
-          points: 500,
-        },
-        {
-          id: 2,
-          firstName: "Bob",
-          lastName: "Johnson",
-          year: 2024,
-          points: 750,
-        },
-        {
-          id: 3,
-          firstName: "Charlie",
-          lastName: "Brown",
-          year: 2025,
-          points: 300,
-        },
-        {
-          id: 4,
-          firstName: "Diana",
-          lastName: "Miller",
-          year: 2023,
-          points: 1200,
-        },
-        { id: 5, firstName: "Eve", lastName: "Davis", year: 2024, points: 600 },
-        {
-          id: 6,
-          firstName: "Frank",
-          lastName: "Wilson",
-          year: 2025,
-          points: 450,
-        },
-      ],
-      filteredStudents: [], // This will hold the search results
-
-      init() {
-        // Initialize with all students displayed
-        this.filteredStudents = this.allStudents;
-      },
-
-      searchStudents() {
-        // Simulate search logic (will be replaced by backend API call)
-        this.filteredStudents = this.allStudents.filter((student) => {
-          const matchesFirstName = this.searchFirstName
-            ? student.firstName
-                .toLowerCase()
-                .includes(this.searchFirstName.toLowerCase())
-            : true;
-          const matchesLastName = this.searchLastName
-            ? student.lastName
-                .toLowerCase()
-                .includes(this.searchLastName.toLowerCase())
-            : true;
-          const matchesYear = this.searchYear
-            ? student.year === this.searchYear
-            : true;
-          return matchesFirstName && matchesLastName && matchesYear;
-        });
-      },
-      // This function is dispatched from the table row button
-      openAwardModal(student) {
-        this.$dispatch("open-award-modal", { student: student });
-      },
-    }));
-  });
-</script>
 {% endblock %}

@@ -154,12 +154,90 @@
 
     <div class="main-content">{% block content %}{% endblock %}</div>
 
-    <!-- Flowbite JavaScript (includes Popper.js for tooltips/popovers) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-    <!-- Alpine.js (removed defer for better compatibility with Flowbite modals) -->
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- Your Custom JavaScript -->
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- Alpine.js (WITH defer, loaded first) -->
+    <!-- <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script> -->
+
+    <!-- Your Custom JavaScript (WITH defer, loaded after Alpine.js) -->
+    <script
+      type="module"
+      src="{{ url_for('static', filename='js/main.js') }}"
+    ></script>
+
+    <!-- Flowbite JavaScript (WITH defer, loaded last) -->
+    <!-- <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"
+    ></script> -->
+    <!--script type="module">
+      // 1) Import Alpine and Flowbite
+      import Alpine from "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/module.esm.js";
+      import "https://cdn.jsdelivr.net/npm/flowbite@2.x/dist/flowbite.js";
+
+      // 2) Register your components
+      Alpine.data("appMessage", () => ({
+        show: false,
+        message: "",
+        type: "success",
+        init() {
+          this.$root.addEventListener("show-message", (e) => {
+            this.show = true;
+            this.message = e.detail.message;
+            this.type = e.detail.type;
+            setTimeout(() => (this.show = false), 3000);
+          });
+        },
+      }));
+
+      Alpine.data("studentShop", () => ({
+        items: [
+          /* … */
+        ],
+        currentBalance: 1234,
+        showModal: false,
+        selectedItem: null,
+        purchaseCount: 1,
+        calculatedCost: 0,
+
+        init() {
+          this.updateCost();
+        },
+        updateCost() {
+          if (!this.selectedItem) return;
+          this.calculatedCost = this.purchaseCount * this.selectedItem.price;
+        },
+        openPurchaseModal(item) {
+          this.selectedItem = item;
+          this.purchaseCount = 1;
+          this.updateCost();
+          this.showModal = true;
+        },
+        closeModal() {
+          this.showModal = false;
+        },
+        confirmPurchase() {
+          this.$dispatch("show-message", {
+            message: `Purchased ${this.purchaseCount}×${this.selectedItem.name} for ${this.calculatedCost} pts`,
+            type: "success",
+          });
+          this.currentBalance -= this.calculatedCost;
+          document.getElementById("current_points").innerText =
+            this.currentBalance;
+          document.getElementById("nav_points_display").innerText =
+            this.currentBalance;
+          this.closeModal();
+        },
+      }));
+
+      Alpine.data("teacherStudentSearch", () => ({
+        /* …same style… */
+      }));
+
+      // 3) Finally, kick Alpine off
+      Alpine.start();
+    </script-->
     {% block body_extra %}{% endblock %}
   </body>
 </html>

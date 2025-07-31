@@ -1,13 +1,12 @@
-<!-- mitchell_rewards/templates/base.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Mitchell Rewards{% endblock %}</title>
     <!-- Google Fonts - Poppins for a modern feel -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
     <!-- Flowbite CSS (Tailwind CSS will be included by Flowbite) -->
@@ -21,30 +20,37 @@
       href="{{ url_for('static', filename='css/style.css') }}"
     />
     {% block head_extra %}{% endblock %}
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+    </style>
   </head>
-  <body class="bg-gray-50 dark:bg-gray-900 font-sans">
-    {% block navbar %}
+  <body class="bg-gray-50 dark:bg-gray-900">
     <!-- Main Navigation Bar (common for all logged-in users) -->
     <nav
+      x-data="navbar()"
+      x-init="init()"
       class="bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 sticky top-0 z-50 shadow-md"
-      x-data="userRoles"
     >
       <div
         class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
       >
         <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
           <span
-            class="self-center text-2xl font-extrabold whitespace-nowrap dark:text-white font-poppins"
+            class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white font-poppins"
             >Mitchell Rewards</span
           >
         </a>
         <div
           class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
         >
-          <!-- User Name/Account Info -->
-          <span class="text-gray-900 dark:text-white text-md font-medium mr-4"
-            >Welcome, <span id="nav_user_name">FirstName LastName</span></span
-          >
+          <!-- User/Points Info (placeholder for now) -->
+          <template x-if="$store.appStore.user.role === 'student'">
+            <span class="text-gray-900 dark:text-white text-md font-medium mr-4"
+              >Points: <span x-text="$store.appStore.user.points"></span
+            ></span>
+          </template>
 
           <button
             type="button"
@@ -68,88 +74,31 @@
           >
             <div class="px-4 py-3">
               <span class="block text-sm text-gray-900 dark:text-white"
-                >Welcome,
-                <span id="nav_user_name_dropdown"
-                  >FirstName LastName</span
-                ></span
-              >
+                >Welcome, <span x-text="$store.appStore.user.name"></span
+              ></span>
               <span
                 class="block text-sm text-gray-500 truncate dark:text-gray-400"
-                id="nav_user_role"
-                x-text="currentRole.charAt(0).toUpperCase() + currentRole.slice(1)"
-                >Student</span
-              >
+                x-text="$store.appStore.user.role"
+              ></span>
             </div>
             <ul class="py-2" aria-labelledby="user-menu-button">
-              <li x-show="Alpine.store('userRoles').currentRole === 'student'">
-                <a
-                  href="/student/dashboard"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >Shop</a
-                >
-              </li>
-              <li x-show="Alpine.store('userRoles').currentRole === 'student'">
-                <a
-                  href="/student/purchases_history"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >My Purchases</a
-                >
-              </li>
-              <li x-show="Alpine.store('userRoles').currentRole === 'student'">
-                <a
-                  href="/student/awards_history"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >My Awards</a
-                >
-              </li>
-              <li x-show="Alpine.store('userRoles').currentRole === 'student'">
-                <a
-                  href="/student/about"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >About</a
-                >
-              </li>
-              <li x-show="Alpine.store('userRoles').currentRole === 'teacher'">
-                <a
-                  href="/teacher/student_search"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >Student Search</a
-                >
-              </li>
-              <li x-show="Alpine.store('userRoles').currentRole === 'teacher'">
-                <a
-                  href="/teacher/rewards_history"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >Award History</a
-                >
-              </li>
-              <li x-show="Alpine.store('userRoles').currentRole === 'admin'">
-                <a
-                  href="/admin/item_shop"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >Admin Shop</a
-                >
-              </li>
-              <li x-show="Alpine.store('userRoles').currentRole === 'teacher'">
-                <a
-                  href="/teacher/student_search"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >Student Search</a
-                >
-              </li>
-              <li x-show="Alpine.store('userRoles').currentRole === 'teacher'">
-                <a
-                  href="/teacher/rewards_history"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >Award History</a
-                >
-              </li>
+              <template
+                x-for="item in $store.appStore.userRoles[$store.appStore.user.role].menuItems"
+                :key="item.page"
+              >
+                <li>
+                  <a
+                    :href="item.href"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    x-text="item.text"
+                  ></a>
+                </li>
+              </template>
               <li>
                 <a
                   href="/login"
-                  class="block px-4 py-2 text-sm text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 dark:text-red-400 dark:hover:text-red-300"
-                  title="This action will log you out of your account."
-                  >Log out</a
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >Sign out</a
                 >
               </li>
             </ul>
@@ -183,79 +132,36 @@
           class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
           id="navbar-user"
         >
-          <!-- Main navigation links will go here for different roles if needed -->
           <ul
             class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-800 dark:border-gray-700"
           >
-            <li x-show="Alpine.store('userRoles').currentRole === 'student'">
-              <a
-                href="/student/dashboard"
-                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white md:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent transition duration-150 ease-in-out {% if request.path == '/student/dashboard' %}md:text-blue-700 md:dark:text-blue-500 bg-blue-100 dark:bg-blue-900/20{% endif %}"
-                aria-current="page"
-                >Shop</a
-              >
-            </li>
-            <li x-show="Alpine.store('userRoles').currentRole === 'student'">
-              <a
-                href="/student/purchases_history"
-                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white md:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent transition duration-150 ease-in-out {% if request.path == '/student/purchases_history' %}md:text-blue-700 md:dark:text-blue-500 bg-blue-100 dark:bg-blue-900/20{% endif %}"
-                >My Purchases</a
-              >
-            </li>
-            <li x-show="Alpine.store('userRoles').currentRole === 'student'">
-              <a
-                href="/student/awards_history"
-                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white md:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent transition duration-150 ease-in-out {% if request.path == '/student/awards_history' %}md:text-blue-700 md:dark:text-blue-500 bg-blue-100 dark:bg-blue-900/20{% endif %}"
-                >My Awards</a
-              >
-            </li>
-            <li x-show="Alpine.store('userRoles').currentRole === 'student'">
-              <a
-                href="/student/about"
-                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white md:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent transition duration-150 ease-in-out {% if request.path == '/student/about' %}md:text-blue-700 md:dark:text-blue-500 bg-blue-100 dark:bg-blue-900/20{% endif %}"
-                >About</a
-              >
-            </li>
-            <li x-show="Alpine.store('userRoles').currentRole === 'teacher'">
-              <a
-                href="/teacher/student_search"
-                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white md:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent transition duration-150 ease-in-out {% if request.path == '/teacher/student_search' %}md:text-blue-700 md:dark:text-blue-500 bg-blue-100 dark:bg-blue-900/20{% endif %}"
-                >Student Search</a
-              >
-            </li>
-            <li x-show="Alpine.store('userRoles').currentRole === 'teacher'">
-              <a
-                href="/teacher/rewards_history"
-                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white md:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent transition duration-150 ease-in-out {% if request.path == '/teacher/rewards_history' %}md:text-blue-700 md:dark:text-blue-500 bg-blue-100 dark:bg-blue-900/20{% endif %}"
-                >Award History</a
-              >
-            </li>
-            <li x-show="Alpine.store('userRoles').currentRole === 'admin'">
-              <a
-                href="/admin/item_shop"
-                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white md:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent transition duration-150 ease-in-out {% if request.path == '/admin/item_shop' %}md:text-blue-700 md:dark:text-blue-500 bg-blue-100 dark:bg-blue-900/20{% endif %}"
-                >Admin Shop</a
-              >
-            </li>
+            <template
+              x-for="item in $store.appStore.userRoles[$store.appStore.user.role].menuItems"
+              :key="item.page"
+            >
+              <li>
+                <a
+                  :href="item.href"
+                  :class="{'block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent border-b border-gray-100 md:border-0': true, 'text-blue-700 dark:text-blue-500 md:bg-transparent md:text-blue-700': item.page === $store.appStore.currentPage, 'text-gray-900': item.page !== $store.appStore.currentPage}"
+                  x-text="item.text"
+                ></a>
+              </li>
+            </template>
           </ul>
         </div>
       </div>
     </nav>
-    {% endblock %}
+    <main class="main-content">{% block content %}{% endblock %}</main>
 
-    <div class="main-content">{% block content %}{% endblock %}</div>
-
-    <!-- Your Custom JavaScript -->
+    <!-- Flowbite JavaScript (includes Popper.js for tooltips/popovers) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <!-- Alpine.js -->
     <script
-      type="module"
-      {#
-      ADDED
-      type="module"
-      back
-      #}
-      src="{{ url_for('static', filename='js/main.js') }}"
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      defer
     ></script>
-
+    <!-- Your Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     {% block body_extra %}{% endblock %}
   </body>
 </html>

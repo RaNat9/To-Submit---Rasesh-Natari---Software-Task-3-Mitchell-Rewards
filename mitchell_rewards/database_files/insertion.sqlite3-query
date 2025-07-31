@@ -1,0 +1,53 @@
+-- database: ./database.db
+
+-- mitchell_rewards/database_files/sample_data.sql
+
+-- This file contains SQL commands to insert sample data into the database
+-- tables for the Mitchell Rewards application.
+
+-- Before running this, ensure your tables are created using the schema.sql file.
+-- You should also enable foreign key support by running `PRAGMA foreign_keys = ON;`.
+
+---
+--- Populate `user_roles` table
+---
+INSERT INTO user_roles (role_name) VALUES ('student');
+INSERT INTO user_roles (role_name) VALUES ('teacher');
+INSERT INTO user_roles (role_name) VALUES ('admin');
+
+---
+--- Populate `users` table
+---
+-- The password_hash is a placeholder for 'password'
+INSERT INTO users (first_name, last_name, email, password_hash, points, role_id, grade_level) VALUES ('John', 'Doe', 'john.doe@mitchell.edu', 'placeholder_hash', 1234, 1, 'Year 10');
+INSERT INTO users (first_name, last_name, email, password_hash, points, role_id, grade_level) VALUES ('Jane', 'Smith', 'jane.smith@mitchell.edu', 'placeholder_hash', 0, 2, NULL);
+INSERT INTO users (first_name, last_name, email, password_hash, points, role_id, grade_level) VALUES ('Admin', 'User', 'admin.user@mitchell.edu', 'placeholder_hash', 0, 3, NULL);
+INSERT INTO users (first_name, last_name, email, password_hash, points, role_id, grade_level) VALUES ('Student', 'A', 'student.a@mitchell.edu', 'placeholder_hash', 500, 1, 'Year 9');
+INSERT INTO users (first_name, last_name, email, password_hash, points, role_id, grade_level) VALUES ('Student', 'B', 'student.b@mitchell.edu', 'placeholder_hash', 750, 1, 'Year 11');
+INSERT INTO users (first_name, last_name, email, password_hash, points, role_id, grade_level) VALUES ('Student', 'C', 'student.c@mitchell.edu', 'placeholder_hash', 300, 1, 'Year 10');
+
+
+---
+--- Populate `items` table
+---
+INSERT INTO items (item_name, description, price, stock, category) VALUES ('Pencil', 'A standard writing pencil', 10, 50, 'Stationery');
+INSERT INTO items (item_name, description, price, stock, category) VALUES ('Notebook', 'A spiral-bound notebook', 25, 20, 'Stationery');
+INSERT INTO items (item_name, description, price, stock, category) VALUES ('Sticker Pack', 'A fun pack of assorted stickers', 5, 100, 'Fun');
+INSERT INTO items (item_name, description, price, stock, category) VALUES ('Movie Ticket', 'A voucher for one movie ticket', 150, 30, 'Experiences');
+
+
+---
+--- Populate `rewards_log` table
+---
+-- 'John Doe' (user_id=1) was awarded points by 'Jane Smith' (user_id=2)
+INSERT INTO rewards_log (student_id, teacher_id, points_awarded, reason) VALUES (1, 2, 50, 'Asking thoughtful questions');
+INSERT INTO rewards_log (student_id, teacher_id, points_awarded, reason) VALUES (1, 2, 25, 'Helping a peer');
+
+
+---
+--- Populate `purchases` table
+---
+-- 'John Doe' (user_id=1) purchased a 'Pencil' (item_id=1)
+INSERT INTO purchases (user_id, item_id) VALUES (1, 1);
+-- 'John Doe' (user_id=1) purchased a 'Notebook' (item_id=2)
+INSERT INTO purchases (user_id, item_id) VALUES (1, 2);

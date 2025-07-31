@@ -1,0 +1,73 @@
+-- database: ./database.db
+-- mitchell_rewards/database_files/schema.sql
+
+-- This file contains the SQL commands to set up the database schema for the
+-- Mitchell Rewards application, using SQLite3 syntax.
+
+-- Note: To enforce foreign key constraints in SQLite3, you must run
+-- `PRAGMA foreign_keys = ON;` at the beginning of your database session.
+
+-- --------------------------------------------------------
+-- Table `user_roles`: Manages the different types of users in the system.
+-- This table is designed to be static and holds roles like 'student', 'teacher', and 'admin'.
+-- --------------------------------------------------------
+CREATE TABLE user_roles (
+    role_id INTEGER PRIMARY KEY,
+    role_name VARCHAR(50) NOT NULL UNIQUE
+);
+
+-- --------------------------------------------------------
+-- Table `users`: Stores information for all users (students, teachers, admins).
+-- Each user is linked to a role from the `user_roles` table.
+-- --------------------------------------------------------
+CREATE TABLE users (
+    user_id INTEGER PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    points INT DEFAULT 0,
+    role_id INT NOT NULL,
+    grade_level VARCHAR(10), -- Added to support the admin analytics requirement
+    FOREIGN KEY (role_id) REFERENCES user_roles(role_id)
+);
+
+-- --------------------------------------------------------
+-- Table `items`: Contains the details for all the reward items available in the shop.
+-- --------------------------------------------------------
+CREATE TABLE items (
+    item_id INTEGER PRIMARY KEY,
+    item_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    price INT NOT NULL,
+    stock INT NOT NULL DEFAULT 0,
+    category VARCHAR(50)
+);
+
+-- --------------------------------------------------------
+-- Table `purchases`: Logs every transaction made by a student.
+-- This table links a specific user (student) to a specific item.
+-- --------------------------------------------------------
+CREATE TABLE purchases (
+    purchase_id INTEGER PRIMARY KEY,
+    user_id INT NOT NULL,
+    item_id INT NOT NULL,
+    purchase_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (item_id) REFERENCES items(item_id)
+);
+
+-- --------------------------------------------------------
+-- Table `rewards_log`: Tracks every point award, including the reason.
+-- This is crucial for the student history view and admin reporting.
+-- --------------------------------------------------------
+CREATE TABLE rewards_log (
+    log_id INTEGER PRIMARY KEY,
+    student_id INT NOT NULL,
+    teacher_id INT NOT NULL,
+    points_awarded INT NOT NULL,
+    reason TEXT NOT NULL,
+    award_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES users(user_id),
+    FOREIGN KEY (teacher_id) REFERENCES users(user_id)
+);

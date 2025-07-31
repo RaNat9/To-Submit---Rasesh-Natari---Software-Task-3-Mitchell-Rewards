@@ -1,10 +1,11 @@
+<!-- mitchell_rewards/templates/index.html -->
 {% extends 'base.html' %} {% block title %}Login - Mitchell Rewards{% endblock
 %} {% block content %}
 <section
   class="index_login_section bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center py-8"
 >
   <div
-    x-data="{ username: '', password: '', userType: 'student' }"
+    x-data="{ email: '', password: '' }"
     class="index_login_container w-full max-w-sm bg-white rounded-lg shadow dark:border border-gray-200 dark:border-gray-700 p-6 space-y-4 md:space-y-6 sm:p-8"
   >
     <h1
@@ -12,6 +13,17 @@
     >
       Mitchell Rewards
     </h1>
+
+    <!-- Flash message or error display -->
+    {% if error %}
+    <div
+      class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+      role="alert"
+    >
+      {{ error }}
+    </div>
+    {% endif %}
+
     <form
       action="{{ url_for('login') }}"
       method="POST"
@@ -19,17 +31,17 @@
     >
       <div>
         <label
-          for="username"
-          class="index_login_label_username block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Username</label
+          for="email"
+          class="index_login_label_email block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Email</label
         >
         <input
-          type="text"
-          name="username"
-          id="username"
-          x-model="username"
-          class="index_login_input_username bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="e.g., JohnDoe"
+          type="email"
+          name="email"
+          id="email"
+          x-model="email"
+          class="index_login_input_email bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="name@mitchell.edu"
           required
         />
       </div>
@@ -48,23 +60,6 @@
           class="index_login_input_password bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           required
         />
-      </div>
-      <div>
-        <label
-          for="user_type"
-          class="index_login_label_usertype block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Role</label
-        >
-        <select
-          id="user_type"
-          name="user_type"
-          x-model="userType"
-          class="index_login_select_usertype bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        >
-          <option value="student">Student</option>
-          <option value="teacher">Teacher</option>
-          <option value="admin">Admin</option>
-        </select>
       </div>
       <button
         type="submit"

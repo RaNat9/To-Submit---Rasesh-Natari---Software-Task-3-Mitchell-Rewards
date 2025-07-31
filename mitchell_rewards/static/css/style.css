@@ -1,1 +1,6 @@
-/* Custom styles go here. Use this file for any CSS that isn't handled by Tailwind. */
+/* mitchell_rewards/static/css/style.css */
+
+/* Define custom font family for Poppins if not directly used by Tailwind config */
+.font-poppins {
+  font-family: "Poppins", sans-serif;
+}

@@ -26,16 +26,16 @@ def login():
     and redirects based on user role.
     """
     if request.method == "POST":
-        email = request.form.get("username")
+        email = request.form.get("email")
         password = request.form.get("password")  # We'll handle this securely later.
 
         user = user_management.get_user_by_email(email)
-
+        print(email, password, user)
         # IMPORTANT: This is a placeholder. A real application would use
         # a secure password hashing library like `bcrypt` or `Werkzeug`
         # to compare the password with the stored hash.
-        if (
-            user and password == "password"
+        if user and (
+            password == "password"
         ):  # Assuming 'password' is the plain text password for now
             session["user_id"] = user["user_id"]
             session["user_role"] = user["role_name"]

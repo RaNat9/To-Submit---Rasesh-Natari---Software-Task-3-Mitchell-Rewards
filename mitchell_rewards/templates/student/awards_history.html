@@ -1,14 +1,14 @@
-<!-- mitchell_rewards/templates/student/rewards_history.html -->
-{% extends 'base.html' %} {% block title %}My Purchases & Awards - Mitchell
-Rewards{% endblock %} {% block content %}
+<!-- mitchell_rewards/templates/student/awards_history.html -->
+{% extends 'base.html' %} {% block title %}My Awards - Mitchell Rewards{%
+endblock %} {% block content %}
 <main
-  x-data="studentRewardsHistory"
-  class="student_rewards_history_main_content p-4 md:p-8"
+  x-data="studentAwardsHistory"
+  class="student_awards_history_main_content p-4 md:p-8"
 >
   <h2
-    class="student_rewards_history_page_title text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center"
+    class="student_awards_history_page_title text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center"
   >
-    My Purchases & Awards
+    My Awards
   </h2>
 
   <!-- Custom Message Box Component - Controlled by appMessage Alpine.data -->
@@ -34,70 +34,27 @@ Rewards{% endblock %} {% block content %}
     </div>
   </div>
 
-  <!-- My Purchases Section (Table Layout) -->
-  <section class="mb-10">
-    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-      My Purchased Items
-    </h3>
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table
-        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-      >
-        <thead
-          class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-        >
-          <tr>
-            <th scope="col" class="px-6 py-3">Reward Item</th>
-            <th scope="col" class="px-6 py-3 text-right">Points Spent</th>
-            <th scope="col" class="px-6 py-3">Date Purchased</th>
-          </tr>
-        </thead>
-        <tbody>
-          <template x-for="purchase in purchases" :key="purchase.id">
-            <tr
-              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-            >
-              <td
-                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                x-text="purchase.item"
-              ></td>
-              <td
-                class="px-6 py-4 text-right text-lg font-bold text-red-700 dark:text-red-500"
-                x-text="'-' + purchase.points"
-              ></td>
-              <td class="px-6 py-4" x-text="purchase.date"></td>
-            </tr>
-          </template>
-          <template x-if="purchases.length === 0">
-            <tr>
-              <td
-                colspan="3"
-                class="px-6 py-4 text-center text-gray-500 dark:text-gray-400"
-              >
-                No purchases made yet.
-              </td>
-            </tr>
-          </template>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
   <!-- My Awarded Points Section (Card Layout) -->
   <section>
-    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-      My Awarded Points
-    </h3>
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+        Points Awarded to Me
+      </h3>
+      <span class="text-lg font-bold text-gray-900 dark:text-white"
+        >Total Awarded: <span x-text="totalAwardedPoints"></span> Points</span
+      >
+    </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <template x-for="award in awardedRewards" :key="award.id">
+      <template x-for="award in awardedPoints" :key="award.id">
         <div
           class="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-6 flex flex-col justify-between"
         >
           <div>
             <h4
-              class="text-lg font-semibold text-gray-900 dark:text-white mb-2"
+              class="text-xl font-bold text-gray-900 dark:text-white mb-2"
               x-text="award.reason"
             ></h4>
+            {# Reason as heading #}
             <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
               <span class="font-medium">Awarded by:</span>
               <span x-text="award.teacher"></span>
@@ -118,13 +75,14 @@ Rewards{% endblock %} {% block content %}
               class="text-2xl font-extrabold text-green-700 dark:text-green-500"
               x-text="'+' + award.points"
             ></span>
+            {# Green for awarded points, larger font #}
             <span class="text-sm text-gray-600 dark:text-gray-400 ml-2"
               >Points</span
             >
           </div>
         </div>
       </template>
-      <template x-if="awardedRewards.length === 0">
+      <template x-if="awardedPoints.length === 0">
         <div
           class="col-span-full text-center text-gray-500 dark:text-gray-400 py-10"
         >
@@ -134,4 +92,14 @@ Rewards{% endblock %} {% block content %}
     </div>
   </section>
 </main>
+{% endblock %} {% block body_extra %}
+<script>
+  document.addEventListener("alpine:init", () => {
+    Alpine.store("userRoles").currentRole = "student";
+    document.getElementById("nav_user_name").innerText = "Student User";
+    document.getElementById("nav_user_name_dropdown").innerText =
+      "Student User";
+    document.getElementById("nav_user_role").innerText = "Student";
+  });
+</script>
 {% endblock %}

@@ -1,14 +1,14 @@
-<!-- mitchell_rewards/templates/teacher/rewards_history.html -->
-{% extends 'base.html' %} {% block title %}Award History - Mitchell Rewards{%
+<!-- mitchell_rewards/templates/student/purchases_history.html -->
+{% extends 'base.html' %} {% block title %}My Purchases - Mitchell Rewards{%
 endblock %} {% block content %}
 <main
-  x-data="teacherRewardsHistory"
-  class="teacher_rewards_history_main_content p-4 md:p-8"
+  x-data="studentPurchasesHistory"
+  class="student_purchases_history_main_content p-4 md:p-8"
 >
   <h2
-    class="teacher_rewards_history_page_title text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center font-poppins"
+    class="student_purchases_history_page_title text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center"
   >
-    Award History
+    My Purchases
   </h2>
 
   <!-- Custom Message Box Component - Controlled by appMessage Alpine.data -->
@@ -34,13 +34,14 @@ endblock %} {% block content %}
     </div>
   </div>
 
-  <section>
+  <!-- My Purchases Section (Table Layout) -->
+  <section class="mb-10">
     <div class="flex justify-between items-center mb-4">
       <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-        Points Awarded by You
+        Purchased Items History
       </h3>
       <span class="text-lg font-bold text-gray-900 dark:text-white"
-        >Total Awarded: <span x-text="totalAwardedPoints"></span> Points</span
+        >Total Spent: <span x-text="totalPurchasesPoints"></span> Points</span
       >
     </div>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -51,38 +52,35 @@ endblock %} {% block content %}
           class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
         >
           <tr>
-            <th scope="col" class="px-6 py-3">Student</th>
-            <th scope="col" class="px-6 py-3">Year</th>
-            <th scope="col" class="px-6 py-3 text-right">Points Awarded</th>
-            <th scope="col" class="px-6 py-3">Reason</th>
-            <th scope="col" class="px-6 py-3">Date Awarded</th>
+            <th scope="col" class="px-6 py-3">Reward Item</th>
+            <th scope="col" class="px-6 py-3 text-right">Points Spent</th>
+            <th scope="col" class="px-6 py-3">Date Purchased</th>
           </tr>
         </thead>
         <tbody>
-          <template x-for="reward in awardedRewards" :key="reward.id">
+          <template x-for="purchase in purchases" :key="purchase.id">
             <tr
               class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
             >
               <td
                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                x-text="reward.student"
+                x-text="purchase.item"
               ></td>
-              <td class="px-6 py-4" x-text="reward.year"></td>
               <td
-                class="px-6 py-4 text-right text-lg font-bold text-green-700 dark:text-green-500"
-                x-text="'+' + reward.points"
+                class="px-6 py-4 text-right text-lg font-bold text-gray-900 dark:text-white"
+                x-text="'-' + purchase.points"
               ></td>
-              <td class="px-6 py-4" x-text="reward.reason"></td>
-              <td class="px-6 py-4" x-text="reward.date"></td>
+              {# Changed to black text #}
+              <td class="px-6 py-4" x-text="purchase.date"></td>
             </tr>
           </template>
-          <template x-if="awardedRewards.length === 0">
+          <template x-if="purchases.length === 0">
             <tr>
               <td
-                colspan="5"
+                colspan="3"
                 class="px-6 py-4 text-center text-gray-500 dark:text-gray-400"
               >
-                No rewards awarded yet.
+                No purchases made yet.
               </td>
             </tr>
           </template>
@@ -94,11 +92,11 @@ endblock %} {% block content %}
 {% endblock %} {% block body_extra %}
 <script>
   document.addEventListener("alpine:init", () => {
-    Alpine.store("userRoles").currentRole = "teacher";
-    document.getElementById("nav_user_name").innerText = "Teacher User";
+    Alpine.store("userRoles").currentRole = "student";
+    document.getElementById("nav_user_name").innerText = "Student User";
     document.getElementById("nav_user_name_dropdown").innerText =
-      "Teacher User";
-    document.getElementById("nav_user_role").innerText = "Teacher";
+      "Student User";
+    document.getElementById("nav_user_role").innerText = "Student";
   });
 </script>
 {% endblock %}

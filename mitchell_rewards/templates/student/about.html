@@ -1,0 +1,353 @@
+<!-- mitchell_rewards/templates/student/about.html -->
+{% extends 'base.html' %} {% block title %}About - Mitchell Rewards{% endblock
+%} {% block content %}
+<main class="about_page_main_content p-4 md:p-8 max-w-4xl mx-auto">
+  <h2
+    class="about_page_title text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center"
+  >
+    About Mitchell Rewards
+  </h2>
+
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+      Welcome to Your Rewards Journey!
+    </h3>
+    <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+      The Mitchell Rewards program is designed to recognize and celebrate your
+      positive contributions to our school community. Every point you earn is a
+      step towards exciting rewards!
+    </p>
+    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+      This page is your guide to understanding how the system works and how you
+      can make the most of it.
+    </p>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+      How to Earn Points:
+    </h3>
+    <div
+      id="accordion-flush"
+      data-accordion="flush"
+      data-active-classes="bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+      data-inactive-classes="text-gray-500 dark:text-gray-400"
+    >
+      <h2 id="accordion-flush-heading-1">
+        <button
+          type="button"
+          class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-900 bg-gray-50 dark:bg-gray-700 dark:text-white border-b border-gray-200 dark:border-gray-700 rounded-t-lg"
+          data-accordion-target="#accordion-flush-body-1"
+          aria-expanded="true"
+          aria-controls="accordion-flush-body-1"
+        >
+          <span>Academic Excellence</span>
+          <svg
+            data-accordion-icon
+            class="w-3 h-3 rotate-180 shrink-0"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5 5 1 1 5"
+            />
+          </svg>
+        </button>
+      </h2>
+      <div
+        id="accordion-flush-body-1"
+        class="hidden"
+        aria-labelledby="accordion-flush-heading-1"
+      >
+        <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+          <p class="mb-2 text-gray-700 dark:text-gray-300 leading-relaxed">
+            <strong>Achieve high marks</strong>, show significant improvement,
+            or demonstrate exceptional effort in your studies.
+          </p>
+        </div>
+      </div>
+
+      <h2 id="accordion-flush-heading-2">
+        <button
+          type="button"
+          class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+          data-accordion-target="#accordion-flush-body-2"
+          aria-expanded="false"
+          aria-controls="accordion-flush-body-2"
+        >
+          <span>Positive Behavior</span>
+          <svg
+            data-accordion-icon
+            class="w-3 h-3 shrink-0"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5 5 1 1 5"
+            />
+          </svg>
+        </button>
+      </h2>
+      <div
+        id="accordion-flush-body-2"
+        class="hidden"
+        aria-labelledby="accordion-flush-heading-2"
+      >
+        <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+          <p class="mb-2 text-gray-700 dark:text-gray-300 leading-relaxed">
+            Exhibit
+            <strong>respect, kindness, and responsibility</strong> towards peers
+            and staff.
+          </p>
+        </div>
+      </div>
+
+      <h2 id="accordion-flush-heading-3">
+        <button
+          type="button"
+          class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+          data-accordion-target="#accordion-flush-body-3"
+          aria-expanded="false"
+          aria-controls="accordion-flush-body-3"
+        >
+          <span>Community Involvement</span>
+          <svg
+            data-accordion-icon
+            class="w-3 h-3 shrink-0"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5 5 1 1 5"
+            />
+          </svg>
+        </button>
+      </h2>
+      <div
+        id="accordion-flush-body-3"
+        class="hidden"
+        aria-labelledby="accordion-flush-heading-3"
+      >
+        <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+          <p class="mb-2 text-gray-700 dark:text-gray-300 leading-relaxed">
+            Participate in school events, clubs, volunteer activities, or help
+            maintain a positive school environment.
+          </p>
+        </div>
+      </div>
+
+      <h2 id="accordion-flush-heading-4">
+        <button
+          type="button"
+          class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+          data-accordion-target="#accordion-flush-body-4"
+          aria-expanded="false"
+          aria-controls="accordion-flush-body-4"
+        >
+          <span>Leadership</span>
+          <svg
+            data-accordion-icon
+            class="w-3 h-3 shrink-0"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5 5 1 1 5"
+            />
+          </svg>
+        </button>
+      </h2>
+      <div
+        id="accordion-flush-body-4"
+        class="hidden"
+        aria-labelledby="accordion-flush-heading-4"
+      >
+        <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+          <p class="mb-2 text-gray-700 dark:text-gray-300 leading-relaxed">
+            Take initiative, lead by example, and contribute to group projects
+            or school initiatives.
+          </p>
+        </div>
+      </div>
+
+      <h2 id="accordion-flush-heading-5">
+        <button
+          type="button"
+          class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+          data-accordion-target="#accordion-flush-body-5"
+          aria-expanded="false"
+          aria-controls="accordion-flush-body-5"
+        >
+          <span>Effort & Improvement</span>
+          <svg
+            data-accordion-icon
+            class="w-3 h-3 shrink-0"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5 5 1 1 5"
+            />
+          </svg>
+        </button>
+      </h2>
+      <div
+        id="accordion-flush-body-5"
+        class="hidden"
+        aria-labelledby="accordion-flush-heading-5"
+      >
+        <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+          <p class="mb-2 text-gray-700 dark:text-gray-300 leading-relaxed">
+            Show dedication to learning, overcome challenges, and consistently
+            strive to do your best.
+          </p>
+        </div>
+      </div>
+
+      <h2 id="accordion-flush-heading-6">
+        <button
+          type="button"
+          class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+          data-accordion-target="#accordion-flush-body-6"
+          aria-expanded="false"
+          aria-controls="accordion-flush-body-6"
+        >
+          <span>Teacher Recognition</span>
+          <svg
+            data-accordion-icon
+            class="w-3 h-3 shrink-0"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5 5 1 1 5"
+            />
+          </svg>
+        </button>
+      </h2>
+      <div
+        id="accordion-flush-body-6"
+        class="hidden"
+        aria-labelledby="accordion-flush-heading-6"
+      >
+        <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+          <p class="mb-2 text-gray-700 dark:text-gray-300 leading-relaxed">
+            Teachers can award points for specific actions or behaviors they
+            observe that align with school values.
+          </p>
+        </div>
+      </div>
+    </div>
+    <p class="text-gray-700 dark:text-gray-300 mt-4 leading-relaxed">
+      Keep an eye out for announcements from your teachers and school
+      administration for special point-earning opportunities!
+    </p>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+      What Can You Do with Points?
+    </h3>
+    <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+      Your earned points can be used to purchase a variety of exciting items and
+      experiences from the <strong>Item Shop</strong>. From stationery and
+      vouchers to unique school experiences, there's something for everyone!
+    </p>
+    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+      Visit the
+      <a
+        href="/student/dashboard"
+        class="text-blue-700 hover:underline dark:text-blue-500 font-medium"
+        >Shop</a
+      >
+      page to see the latest available rewards and start saving up for your
+      favorites!
+    </p>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+      Need Help?
+    </h3>
+    <p class="text-gray-700 dark:text-gray-300 mb-2 leading-relaxed">
+      If you have any questions about the Mitchell Rewards program, your points
+      balance, or how to redeem rewards, please don't hesitate to speak to your
+      teacher or a school administrator.
+    </p>
+    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+      We're here to help you succeed and make your time at Mitchell High School
+      even more rewarding!
+    </p>
+  </div>
+
+  <div class="mt-8 text-center">
+    <a
+      href="/student/dashboard"
+      class="inline-flex items-center px-6 py-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    >
+      <svg
+        class="w-4 h-4 me-2"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 14 10"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 5H1m0 0 4 4M1 5l4-4"
+        />
+      </svg>
+      Back to Shop
+    </a>
+  </div>
+</main>
+{% endblock %} {% block body_extra %}
+<script>
+  document.addEventListener("alpine:init", () => {
+    Alpine.store("userRoles").currentRole = "student";
+    document.getElementById("nav_user_name").innerText = "Student User";
+    document.getElementById("nav_user_name_dropdown").innerText =
+      "Student User";
+    document.getElementById("nav_user_role").innerText = "Student";
+  });
+</script>
+{% endblock %}

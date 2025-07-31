@@ -7,7 +7,7 @@
     <title>{% block title %}Mitchell Rewards{% endblock %}</title>
     <!-- Google Fonts - Poppins for a modern feel -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
       rel="stylesheet"
     />
     <!-- Flowbite CSS (Tailwind CSS will be included by Flowbite) -->
@@ -23,25 +23,27 @@
     {% block head_extra %}{% endblock %}
   </head>
   <body class="bg-gray-50 dark:bg-gray-900 font-sans">
+    {% block navbar %}
     <!-- Main Navigation Bar (common for all logged-in users) -->
     <nav
       class="bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 sticky top-0 z-50 shadow-md"
+      x-data="userRoles"
     >
       <div
         class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
       >
         <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
           <span
-            class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white font-poppins"
+            class="self-center text-2xl font-extrabold whitespace-nowrap dark:text-white font-poppins"
             >Mitchell Rewards</span
           >
         </a>
         <div
           class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
         >
-          <!-- User/Points Info (placeholder for now) -->
+          <!-- User Name/Account Info -->
           <span class="text-gray-900 dark:text-white text-md font-medium mr-4"
-            >Points: <span id="nav_points_display">1234</span></span
+            >Welcome, <span id="nav_user_name">FirstName LastName</span></span
           >
 
           <button
@@ -67,34 +69,87 @@
             <div class="px-4 py-3">
               <span class="block text-sm text-gray-900 dark:text-white"
                 >Welcome,
-                <span id="nav_user_name">FirstName LastName</span></span
+                <span id="nav_user_name_dropdown"
+                  >FirstName LastName</span
+                ></span
               >
               <span
                 class="block text-sm text-gray-500 truncate dark:text-gray-400"
                 id="nav_user_role"
+                x-text="currentRole.charAt(0).toUpperCase() + currentRole.slice(1)"
                 >Student</span
               >
             </div>
             <ul class="py-2" aria-labelledby="user-menu-button">
-              <li>
+              <li x-show="Alpine.store('userRoles').currentRole === 'student'">
                 <a
                   href="/student/dashboard"
                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >Shop</a
                 >
               </li>
-              <li>
+              <li x-show="Alpine.store('userRoles').currentRole === 'student'">
                 <a
-                  href="/student/rewards_history"
+                  href="/student/purchases_history"
                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >My Rewards</a
+                  >My Purchases</a
+                >
+              </li>
+              <li x-show="Alpine.store('userRoles').currentRole === 'student'">
+                <a
+                  href="/student/awards_history"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >My Awards</a
+                >
+              </li>
+              <li x-show="Alpine.store('userRoles').currentRole === 'student'">
+                <a
+                  href="/student/about"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >About</a
+                >
+              </li>
+              <li x-show="Alpine.store('userRoles').currentRole === 'teacher'">
+                <a
+                  href="/teacher/student_search"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >Student Search</a
+                >
+              </li>
+              <li x-show="Alpine.store('userRoles').currentRole === 'teacher'">
+                <a
+                  href="/teacher/rewards_history"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >Award History</a
+                >
+              </li>
+              <li x-show="Alpine.store('userRoles').currentRole === 'admin'">
+                <a
+                  href="/admin/item_shop"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >Admin Shop</a
+                >
+              </li>
+              <li x-show="Alpine.store('userRoles').currentRole === 'teacher'">
+                <a
+                  href="/teacher/student_search"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >Student Search</a
+                >
+              </li>
+              <li x-show="Alpine.store('userRoles').currentRole === 'teacher'">
+                <a
+                  href="/teacher/rewards_history"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >Award History</a
                 >
               </li>
               <li>
                 <a
-                  href="#"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >Sign out</a
+                  href="/login"
+                  class="block px-4 py-2 text-sm text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 dark:text-red-400 dark:hover:text-red-300"
+                  title="This action will log you out of your account."
+                  >Log out</a
                 >
               </li>
             </ul>
@@ -132,112 +187,75 @@
           <ul
             class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-800 dark:border-gray-700"
           >
-            <li>
+            <li x-show="Alpine.store('userRoles').currentRole === 'student'">
               <a
                 href="/student/dashboard"
-                class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
+                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white md:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent transition duration-150 ease-in-out {% if request.path == '/student/dashboard' %}md:text-blue-700 md:dark:text-blue-500 bg-blue-100 dark:bg-blue-900/20{% endif %}"
                 aria-current="page"
                 >Shop</a
               >
             </li>
-            <li>
+            <li x-show="Alpine.store('userRoles').currentRole === 'student'">
               <a
-                href="/student/rewards_history"
-                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent border-b border-gray-100 md:border-0"
-                >My Rewards</a
+                href="/student/purchases_history"
+                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white md:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent transition duration-150 ease-in-out {% if request.path == '/student/purchases_history' %}md:text-blue-700 md:dark:text-blue-500 bg-blue-100 dark:bg-blue-900/20{% endif %}"
+                >My Purchases</a
+              >
+            </li>
+            <li x-show="Alpine.store('userRoles').currentRole === 'student'">
+              <a
+                href="/student/awards_history"
+                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white md:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent transition duration-150 ease-in-out {% if request.path == '/student/awards_history' %}md:text-blue-700 md:dark:text-blue-500 bg-blue-100 dark:bg-blue-900/20{% endif %}"
+                >My Awards</a
+              >
+            </li>
+            <li x-show="Alpine.store('userRoles').currentRole === 'student'">
+              <a
+                href="/student/about"
+                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white md:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent transition duration-150 ease-in-out {% if request.path == '/student/about' %}md:text-blue-700 md:dark:text-blue-500 bg-blue-100 dark:bg-blue-900/20{% endif %}"
+                >About</a
+              >
+            </li>
+            <li x-show="Alpine.store('userRoles').currentRole === 'teacher'">
+              <a
+                href="/teacher/student_search"
+                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white md:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent transition duration-150 ease-in-out {% if request.path == '/teacher/student_search' %}md:text-blue-700 md:dark:text-blue-500 bg-blue-100 dark:bg-blue-900/20{% endif %}"
+                >Student Search</a
+              >
+            </li>
+            <li x-show="Alpine.store('userRoles').currentRole === 'teacher'">
+              <a
+                href="/teacher/rewards_history"
+                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white md:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent transition duration-150 ease-in-out {% if request.path == '/teacher/rewards_history' %}md:text-blue-700 md:dark:text-blue-500 bg-blue-100 dark:bg-blue-900/20{% endif %}"
+                >Award History</a
+              >
+            </li>
+            <li x-show="Alpine.store('userRoles').currentRole === 'admin'">
+              <a
+                href="/admin/item_shop"
+                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 dark:text-white md:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent transition duration-150 ease-in-out {% if request.path == '/admin/item_shop' %}md:text-blue-700 md:dark:text-blue-500 bg-blue-100 dark:bg-blue-900/20{% endif %}"
+                >Admin Shop</a
               >
             </li>
           </ul>
         </div>
       </div>
     </nav>
+    {% endblock %}
 
     <div class="main-content">{% block content %}{% endblock %}</div>
 
-    <!-- Alpine.js (WITH defer, loaded first) -->
-    <!-- <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
-    ></script> -->
-
-    <!-- Your Custom JavaScript (WITH defer, loaded after Alpine.js) -->
+    <!-- Your Custom JavaScript -->
     <script
       type="module"
+      {#
+      ADDED
+      type="module"
+      back
+      #}
       src="{{ url_for('static', filename='js/main.js') }}"
     ></script>
 
-    <!-- Flowbite JavaScript (WITH defer, loaded last) -->
-    <!-- <script
-      defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"
-    ></script> -->
-    <!--script type="module">
-      // 1) Import Alpine and Flowbite
-      import Alpine from "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/module.esm.js";
-      import "https://cdn.jsdelivr.net/npm/flowbite@2.x/dist/flowbite.js";
-
-      // 2) Register your components
-      Alpine.data("appMessage", () => ({
-        show: false,
-        message: "",
-        type: "success",
-        init() {
-          this.$root.addEventListener("show-message", (e) => {
-            this.show = true;
-            this.message = e.detail.message;
-            this.type = e.detail.type;
-            setTimeout(() => (this.show = false), 3000);
-          });
-        },
-      }));
-
-      Alpine.data("studentShop", () => ({
-        items: [
-          /* … */
-        ],
-        currentBalance: 1234,
-        showModal: false,
-        selectedItem: null,
-        purchaseCount: 1,
-        calculatedCost: 0,
-
-        init() {
-          this.updateCost();
-        },
-        updateCost() {
-          if (!this.selectedItem) return;
-          this.calculatedCost = this.purchaseCount * this.selectedItem.price;
-        },
-        openPurchaseModal(item) {
-          this.selectedItem = item;
-          this.purchaseCount = 1;
-          this.updateCost();
-          this.showModal = true;
-        },
-        closeModal() {
-          this.showModal = false;
-        },
-        confirmPurchase() {
-          this.$dispatch("show-message", {
-            message: `Purchased ${this.purchaseCount}×${this.selectedItem.name} for ${this.calculatedCost} pts`,
-            type: "success",
-          });
-          this.currentBalance -= this.calculatedCost;
-          document.getElementById("current_points").innerText =
-            this.currentBalance;
-          document.getElementById("nav_points_display").innerText =
-            this.currentBalance;
-          this.closeModal();
-        },
-      }));
-
-      Alpine.data("teacherStudentSearch", () => ({
-        /* …same style… */
-      }));
-
-      // 3) Finally, kick Alpine off
-      Alpine.start();
-    </script-->
     {% block body_extra %}{% endblock %}
   </body>
 </html>

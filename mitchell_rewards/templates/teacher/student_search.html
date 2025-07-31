@@ -2,7 +2,7 @@
 {% extends 'base.html' %} {% block title %}Teacher Student Search - Mitchell
 Rewards{% endblock %} {% block content %}
 <main
-  x-data="teacherStudentSearch()"
+  x-data="teacherStudentSearch"
   class="teacher_search_main_content p-4 md:p-8"
 >
   <h2
@@ -13,7 +13,7 @@ Rewards{% endblock %} {% block content %}
 
   <!-- Custom Message Box Component - Controlled by appMessage Alpine.data -->
   <div
-    x-data="appMessage()"
+    x-data="appMessage"
     x-show="show"
     x-transition:enter="transition ease-out duration-300"
     x-transition:enter-start="opacity-0 scale-90"
@@ -95,58 +95,56 @@ Rewards{% endblock %} {% block content %}
     </form>
   </div>
 
-  <!-- Search Results Table -->
-  <div
-    class="teacher_search_results_container relative overflow-x-auto shadow-md sm:rounded-lg"
-  >
-    <table
-      class="teacher_search_results_table w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-    >
-      <thead
-        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+  <!-- Search Results Grid (Card Layout) -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <template x-if="filteredStudents.length === 0">
+      <div
+        class="col-span-full text-center text-gray-500 dark:text-gray-400 py-10"
       >
-        <tr>
-          <th scope="col" class="px-6 py-3">First Name</th>
-          <th scope="col" class="px-6 py-3">Last Name</th>
-          <th scope="col" class="px-6 py-3">Year</th>
-          <th scope="col" class="px-6 py-3">Current Points</th>
-          <th scope="col" class="px-6 py-3">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <template x-if="filteredStudents.length === 0">
-          <tr>
-            <td
-              colspan="5"
-              class="px-6 py-4 text-center text-gray-500 dark:text-gray-400"
-            >
-              No students found. Try adjusting your search.
-            </td>
-          </tr>
-        </template>
-        <template x-for="student in filteredStudents" :key="student.id">
-          <tr
-            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+        No students found. Try adjusting your search.
+      </div>
+    </template>
+    <template x-for="student in filteredStudents" :key="student.id">
+      <div
+        class="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-6 flex flex-col justify-between"
+      >
+        <div>
+          <h3
+            class="text-xl font-bold text-gray-900 dark:text-white mb-1"
+            x-text="student.firstName + ' ' + student.lastName"
+          ></h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+            Year: <span x-text="student.year"></span>
+          </p>
+        </div>
+        <div
+          class="flex flex-col items-center mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"
+        >
+          {# Changed to flex-col for vertical alignment #}
+          <span class="text-lg font-bold text-blue-700 dark:text-blue-500 mb-3"
+            >Current Points: <span x-text="student.points"></span
+          ></span>
+          {# Label changed #}
+          <button
+            @click="openAwardModal(student)"
+            class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-full max-w-[85%]"
           >
-            <td
-              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              x-text="student.firstName"
-            ></td>
-            <td class="px-6 py-4" x-text="student.lastName"></td>
-            <td class="px-6 py-4" x-text="student.year"></td>
-            <td class="px-6 py-4" x-text="student.points"></td>
-            <td class="px-6 py-4">
-              <button
-                @click="openAwardModal(student)"
-                class="teacher_search_button_award font-medium text-blue-600 dark:text-blue-500 hover:underline"
-              >
-                Award Points
-              </button>
-            </td>
-          </tr>
-        </template>
-      </tbody>
-    </table>
+            {# Added justify-center and w-full max-w-[85%] #} Award Points
+            <svg
+              class="w-3.5 h-3.5 ms-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0v-3H6a1 1 0 1 1 0-2h3V6a1 1 0 0 1 1-1Z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </template>
   </div>
 
   <!-- Award Points Modal (Alpine.js controlled, with transparent background) -->
@@ -163,8 +161,9 @@ Rewards{% endblock %} {% block content %}
     <!-- Transparent background overlay -->
     <div
       @click="closeModal()"
-      class="absolute inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm"
+      class="absolute inset-0 bg-gray-900 bg-opacity-70 backdrop-blur-sm"
     ></div>
+    {# Increased opacity #}
 
     <!-- Modal content -->
     <div
@@ -221,7 +220,7 @@ Rewards{% endblock %} {% block content %}
             id="award-reason"
             x-model="awardReason"
             rows="4"
-            class="teacher_award_input_reason block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            class="teacher_award_input_reason block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="e.g., Excellent participation in class"
           ></textarea>
         </div>
@@ -250,4 +249,14 @@ Rewards{% endblock %} {% block content %}
     </div>
   </div>
 </main>
+{% endblock %} {% block body_extra %}
+<script>
+  document.addEventListener("alpine:init", () => {
+    Alpine.store("userRoles").currentRole = "teacher";
+    document.getElementById("nav_user_name").innerText = "Teacher User";
+    document.getElementById("nav_user_name_dropdown").innerText =
+      "Teacher User";
+    document.getElementById("nav_user_role").innerText = "Teacher";
+  });
+</script>
 {% endblock %}

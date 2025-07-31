@@ -59,26 +59,49 @@ endblock %} {% block content %}
         <input
           type="search"
           id="student_shop_search_input"
-          class="student_shop_search_input block w-full p-2.5 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          x-model="searchQuery"
+          @keyup.enter="applyFilters()"
+          class="student_shop_search_input block w-full p-2.5 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="Search items..."
         />
       </div>
       <div class="w-full md:w-1/4">
         <select
           id="student_shop_filter_category"
+          x-model="filterCategory"
+          @change="applyFilters()"
           class="student_shop_filter_category bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         >
           <option selected>All Categories</option>
           <option value="stationery">Stationery</option>
           <option value="vouchers">Vouchers</option>
           <option value="experiences">Experiences</option>
+          <option value="electronics">Electronics</option>
+          <option value="accessories">Accessories</option>
         </select>
       </div>
       <div class="w-full md:w-1/4 flex justify-end">
-        <span
-          class="student_shop_points_display text-lg font-bold text-gray-900 dark:text-white"
-          >Your Points: <span id="current_points">1234</span></span
+        <button
+          @click="applyFilters()"
+          class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
+          Search
+          <svg
+            class="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 20"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   </div>
@@ -92,7 +115,8 @@ endblock %} {% block content %}
       <div
         class="student_shop_item_card bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 overflow-hidden"
       >
-        <a href="#">
+        <a @click.prevent="openPurchaseModal(item)" href="#">
+          {# Added @click.prevent to stop default # link behavior #}
           <img
             class="student_shop_item_image rounded-t-lg w-full h-48 object-cover"
             :src="item.image"
@@ -101,7 +125,8 @@ endblock %} {% block content %}
           />
         </a>
         <div class="p-5">
-          <a href="#">
+          <a @click.prevent="openPurchaseModal(item)" href="#">
+            {# Added @click.prevent #}
             <h5
               class="student_shop_item_name mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
               x-text="item.name"
@@ -139,6 +164,13 @@ endblock %} {% block content %}
         </div>
       </div>
     </template>
+    <template x-if="items.length === 0">
+      <div
+        class="col-span-full text-center text-gray-500 dark:text-gray-400 py-10"
+      >
+        No items found matching your criteria.
+      </div>
+    </template>
   </div>
 
   <!-- Purchase Modal (Alpine.js controlled, with transparent background) -->
@@ -155,8 +187,9 @@ endblock %} {% block content %}
     <!-- Transparent background overlay -->
     <div
       @click="closeModal()"
-      class="absolute inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm"
+      class="absolute inset-0 bg-gray-900 bg-opacity-70 backdrop-blur-sm"
     ></div>
+    {# Increased opacity #}
 
     <!-- Modal content -->
     <div
@@ -199,7 +232,8 @@ endblock %} {% block content %}
         <p
           class="student_purchase_balance_display mb-4 text-lg font-semibold text-gray-900 dark:text-white"
         >
-          Balance: <span x-text="currentBalance"></span>
+          Balance:
+          <span id="current_points_modal" x-text="currentBalance"></span>
         </p>
         <div class="mb-4">
           <label
@@ -233,4 +267,15 @@ endblock %} {% block content %}
     </div>
   </div>
 </main>
+{% endblock %} {% block body_extra %}
+<script>
+  document.addEventListener("alpine:init", () => {
+    Alpine.store("userRoles").currentRole = "student";
+    // Also update the displayed user name and role in the nav bar
+    document.getElementById("nav_user_name").innerText = "Student User";
+    document.getElementById("nav_user_name_dropdown").innerText =
+      "Student User";
+    document.getElementById("nav_user_role").innerText = "Student";
+  });
+</script>
 {% endblock %}
